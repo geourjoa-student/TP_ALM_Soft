@@ -1,0 +1,44 @@
+--- Lexique : ---
+
+N1 : la constante entiere 5
+N2 : la constante entiere 4
+N : la constante entiere N1+N2
+T1 : un tableau sur 0..N1-1 d'entiers relatifs sur 8 bits, trie decroissant
+T1 = [12, 10, 8, 8, -7]
+T2 : un tableau sur 0..N2-1 d'entiers relatifs sur 16 bits, trie decroissant
+T2 = [15, 8, -1, -4]
+T : un tableau sur 0..N1+N2-1 d'entiers relatifs sur 32 bit]]
+i1, i2, i : des entiers naturels -- indice de parcours de T1, T2, et T
+
+--- Algo : ---
+
+i1 <- 0
+i2 <- 0
+i <- 0
+
+tantque (i1 < N1) faire
+	tantque (i2 < N2) et puis (T2[i2] >= T1[i2]) faire
+		T[i] = T2[i2]
+		i <- i+1           -- on avance sur T
+		i2 <- i2+1      -- on avance sur T2
+	ftantque
+	T[i] = T1[i1]
+	i <- i+1           -- on avance sur T
+	i1 <- i1+1      -- on avance sur T1
+ftantque
+
+-- i1=N1, il faut maintenant recopier dans T la fin du tableau T2
+tantque (i2<N2)
+	T[i] = T2[i2]
+	i <- i+1          -- on avance sur T
+	i2 <- i2+1      -- on avance sur T2
+ftantque
+
+-- affichage du resultat
+
+i <- 0
+tantque (i<N) faire
+	afficher(T[i])
+	i <- i+1        -- on avance sur T
+ftantque
+
