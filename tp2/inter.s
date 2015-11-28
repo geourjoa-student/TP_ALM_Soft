@@ -9,7 +9,7 @@
 .data
 
 .set N1, 5 
-.set N2, 4
+.set N2, 3 
 .set N, N1+N2
 
 	.align 
@@ -25,9 +25,8 @@ T1: 	.byte 12
 T2:	.hword 15
 	.hword 8
 	.hword -1
-	.hword -4
 
-	.align
+.align
 .bss
 
 T: 	.skip N*4
@@ -40,13 +39,13 @@ T: 	.skip N*4
 
 main:	stmfd sp!, {lr} 
 	
-	
+
 	@ -- Interclassement --
 	
 	
-	mov R1, #relaisT1	@R1 correpondra à l'adresse de T[1i1]
-	mov R2, #relaisT2 	@R2 correpondra à l'adresse de T2[i2]
-	mov R0, #relaisT 	@R0 correpondra à l'adresse de T[i]
+	ldr R1, =T1	@R1 correpondra à l'adresse de T[i1]
+	ldr R2, =T2 	@R2 correpondra à l'adresse de T2[i2]
+	ldr R0, =T 	@R0 correpondra à l'adresse de T[i]
 
 	mov R3, #0		@R1 correpondra à i1
 	mov R4, #0		@R2 correpondra à i2
@@ -58,13 +57,14 @@ main:	stmfd sp!, {lr}
 	bal test1
 tque1:	
 	
-tque2: 	cmp r4, #N2		@i2<N2
+tque2: 	cmp r4, #N2		@tantque (i2 < N2)
 	bge ftque2
 	
-	ldrb r6, [r1]		@r6 -> valeur T1[i1]
-	ldrh r7, [r2]		@r7 -> valeur T2[i2]
-	cmp r7,r6 
-	blt ftque2		@T[i1]>=T[i2]
+	ldrsb r6, [r1]		@r6 -> valeur T1[i1]		Ldrsb ou ldrsh : http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0489c/Cihjffga.htmlhttp://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0489c/Cihjffga.html
+	ldrsh r7, [r2]		@r7 -> valeur T2[i2]
+
+	cmp r7,r6		@et puis (T2[i2] >= T1[i2]) faire) 
+	blt ftque2	
 
 boucle2:
 	str r7, [r0]
@@ -83,7 +83,7 @@ ftque2:
 	add r5,r5,#1
 	add r3,r3,#1
 
-test1:	cmp r1, #N1
+test1:	cmp r3, #N1 		@ tantque (i1 < N1) faire)
 	blt tque1
 
 
@@ -103,8 +103,8 @@ tque3:	str r4, [r0]
 	add r4, r4, #1
 
 
-test3:	cmp r2, #N2
-	blt tq3
+test3:	cmp r4, #N2
+	blt tque3
 
 
 
@@ -114,16 +114,20 @@ test3:	cmp r2, #N2
 
 @ -- affichage --
 
-	MOV r0, #RelaisT 
-
+	ldr r0, =T 
+	mov r2, #0
 	bal test4
 tque4:	
-	bl EcrHexa32 		@ impression de la somme
+	ldr r1, [r0]
+	bl EcrRelatif32 		@ impression de la somme (relatif)
+	bl EcrNaturel32
+	bl EcrHexa32
 	add r0, r0, #4
-test4: 	cmp r0, #N
-	bl tque4
+	add r2,r2,#1
+test4: 	cmp r2, #N
+	blt tque4
 
-d
+
 
 
 
@@ -132,6 +136,3 @@ d
 
 fin :	ldmfd sp!, {pc}
 
-relaisT1: .byte T1
-relaisT2: .hword T2
-relaisT: .word T
