@@ -49,12 +49,9 @@ main:	stmfd sp!, {lr}
 	ldr R1, =T1		@R1 correpondra à l'adresse de T[i1]
 	ldr R2, =T2 		@R2 correpondra à l'adresse de T2[i2]
 	ldr R0, =T 		@R0 correpondra à l'adresse de T[i]
-
 	mov R3, #0		@R1 correpondra à i1
 	mov R4, #0		@R2 correpondra à i2
 	mov R5, #0	 	@R0 correpondra à i
-
-
 	bal test1
 tque1:	
 	
@@ -64,10 +61,8 @@ tque2:
 	
 	ldrsb r6, [r1]		@r6 -> valeur T1[i1]		Ldrsb ou ldrsh : http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0489c/Cihjffga.html
 	ldrsh r7, [r2]		@r7 -> valeur T2[i2]
-
 	cmp r7,r6		@et puis (T2[i2] >= T1[i2]) faire) 
 	blt ftque2	
-
 boucle2:
 	str r7, [r0]
 	add r0, r0, #4		@ incrémentation de l'adresse
