@@ -9,7 +9,7 @@
 .data
 
 .set N1, 5 
-.set N2, 3 
+.set N2, 4  
 .set N, N1+N2
 
 	.align 
@@ -18,15 +18,18 @@ T1: 	.byte 12
 	.byte 10
 	.byte 8
 	.byte 8
-	.byte -7
-
+	.byte -15
+	
 	.align
 
 T2:	.hword 15
 	.hword 8
 	.hword -1
+	.hword -4
+@	.hword -12
 
-.align
+	.align
+
 .bss
 
 T: 	.skip N*4
@@ -43,24 +46,23 @@ main:	stmfd sp!, {lr}
 	@ -- Interclassement --
 	
 	
-	ldr R1, =T1	@R1 correpondra à l'adresse de T[i1]
-	ldr R2, =T2 	@R2 correpondra à l'adresse de T2[i2]
-	ldr R0, =T 	@R0 correpondra à l'adresse de T[i]
+	ldr R1, =T1		@R1 correpondra à l'adresse de T[i1]
+	ldr R2, =T2 		@R2 correpondra à l'adresse de T2[i2]
+	ldr R0, =T 		@R0 correpondra à l'adresse de T[i]
 
 	mov R3, #0		@R1 correpondra à i1
 	mov R4, #0		@R2 correpondra à i2
 	mov R5, #0	 	@R0 correpondra à i
 
 
-
-
 	bal test1
 tque1:	
 	
-tque2: 	cmp r4, #N2		@tantque (i2 < N2)
-	bge ftque2
+tque2: 	
+	cmp r4, #N2		@tantque (i2 < N2)
+	bgt ftque2
 	
-	ldrsb r6, [r1]		@r6 -> valeur T1[i1]		Ldrsb ou ldrsh : http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0489c/Cihjffga.htmlhttp://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0489c/Cihjffga.html
+	ldrsb r6, [r1]		@r6 -> valeur T1[i1]		Ldrsb ou ldrsh : http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0489c/Cihjffga.html
 	ldrsh r7, [r2]		@r7 -> valeur T2[i2]
 
 	cmp r7,r6		@et puis (T2[i2] >= T1[i2]) faire) 
@@ -73,6 +75,8 @@ boucle2:
 	
 	add r5, r5, #1		@ incrémentation de l'indice
 	add r4, r4, #1
+
+	bal tque2
 
 ftque2:
 
@@ -87,15 +91,11 @@ test1:	cmp r3, #N1 		@ tantque (i1 < N1) faire)
 	blt tque1
 
 
-
-
-
-
-
-
 	bal test3
 
-tque3:	str r4, [r0]
+tque3:	
+	ldrsh r7, [r2]
+	str r7, [r0]
 	add r0, r0, #4
 	add r2, r2, #2
 
@@ -108,10 +108,6 @@ test3:	cmp r4, #N2
 
 
 
-
-
-
-
 @ -- affichage --
 
 	ldr r0, =T 
@@ -120,7 +116,6 @@ test3:	cmp r4, #N2
 tque4:	
 	ldr r1, [r0]
 	bl EcrRelatif32 		@ impression de la somme (relatif)
-	bl EcrNaturel32
 	bl EcrHexa32
 	add r0, r0, #4
 	add r2,r2,#1
