@@ -8,9 +8,9 @@
 
 .data
 
-.set N1, 5 
+.set N1, 5
 .set N2, 4  
-.set N, N1+N2
+.set N, N1+N2 
 
 	.align 
 
@@ -18,7 +18,7 @@ T1: 	.byte 12
 	.byte 10
 	.byte 8
 	.byte 8
-	.byte -15
+	.byte -7
 	
 	.align
 
@@ -26,7 +26,6 @@ T2:	.hword 15
 	.hword 8
 	.hword -1
 	.hword -4
-@	.hword -12
 
 	.align
 
@@ -57,7 +56,7 @@ tque1:
 	
 tque2: 	
 	cmp r4, #N2		@tantque (i2 < N2)
-	bgt ftque2
+	bge ftque2
 	
 	ldrsb r6, [r1]		@r6 -> valeur T1[i1]		Ldrsb ou ldrsh : http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0489c/Cihjffga.html
 	ldrsh r7, [r2]		@r7 -> valeur T2[i2]
@@ -65,11 +64,11 @@ tque2:
 	blt ftque2	
 boucle2:
 	str r7, [r0]
-	add r0, r0, #4		@ incrémentation de l'adresse
-	add r2, r2, #2
+	add r0, r0, #4		@ incrémentation de l'adresse 
+	add r2, r2, #2		@ idem mais de 2 car c'est un halfword
 	
 	add r5, r5, #1		@ incrémentation de l'indice
-	add r4, r4, #1
+	add r4, r4, #1	
 
 	bal tque2
 
@@ -111,17 +110,10 @@ test3:	cmp r4, #N2
 tque4:	
 	ldr r1, [r0]
 	bl EcrRelatif32 		@ impression de la somme (relatif)
-	bl EcrHexa32
 	add r0, r0, #4
 	add r2,r2,#1
 test4: 	cmp r2, #N
 	blt tque4
-
-
-
-
-
-	
 
 
 fin :	ldmfd sp!, {pc}
