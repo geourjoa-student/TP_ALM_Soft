@@ -9,3 +9,5 @@ inter.o : inter.s
 es.o : es.s
 	simgcc -c es.s
 
+clean :
+	rm *.o inter
